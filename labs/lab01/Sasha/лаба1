@@ -1,0 +1,73 @@
+// створити клас поінт, перевизначити в ньому всі необхідні конструктори, визначити в ньому метод прінт, 
+// визначити в ньому сетори які потрібні,
+// атрибути ніколи не мають бути паблік, визначити клас поінт, поунт 3д, 
+// поінт колор, поінт 3д колор, перевизначити в ньому необхідні методи гетори/сетори
+#include <iostream>
+#include <string>
+
+class Point {
+private:
+    int x, y;
+
+public:
+    Point(int x=0, int y=0) : x(x), y(y) {}
+    Point(const Point& p) : x(p.x), y(p.y) {}
+
+    int getX() const { return x; }
+    int getY() const { return y; }
+    void setX(int v) { x = v; }
+    void setY(int v) { y = v; }
+
+    void print() const { std::cout << "(" << x << "," << y << ")\n"; }
+};
+
+class Point3D : public Point {
+private:
+    int z;
+
+public:
+    Point3D(int x=0, int y=0, int z=0) : Point(x,y), z(z) {}
+    Point3D(const Point3D& p) : Point(p), z(p.z) {}
+
+    int getZ() const { return z; }
+    void setZ(int v) { z = v; }
+
+    void print() const { std::cout << "(" << getX() << "," << getY() << "," << z << ")\n"; }
+};
+
+class PointColor : public Point {
+private:
+    std::string color;
+
+public:
+    PointColor(int x=0, int y=0, std::string c="black") : Point(x,y), color(c) {}
+    PointColor(const PointColor& p) : Point(p), color(p.color) {}
+
+    std::string getColor() const { return color; }
+    void setColor(const std::string& c) { color = c; }
+
+    void print() const { std::cout << "(" << getX() << "," << getY() << "," << color << ")\n"; }
+};
+
+class Point3DColor : public Point3D {
+private:
+    std::string color;
+
+public:
+    Point3DColor(int x=0,int y=0,int z=0,std::string c="black") : Point3D(x,y,z), color(c) {}
+    Point3DColor(const Point3DColor& p) : Point3D(p), color(p.color) {}
+
+    std::string getColor() const { return color; }
+    void setColor(const std::string& c) { color = c; }
+
+    void print() const {
+        std::cout << "(" << getX() << "," << getY() << "," << getZ() << "," << color << ")\n";
+    }
+};
+
+int main() {
+    Point p(1,2); p.print();
+    Point3D p3(1,2,3); p3.print();
+    PointColor pc(4,5,"red"); pc.print();
+    Point3DColor p3c(7,8,9,"blue"); p3c.print();
+}
