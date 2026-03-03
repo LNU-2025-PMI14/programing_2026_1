@@ -11,7 +11,6 @@ public:
     virtual ~Container() {}
 };
 
-//на основі списку
 class ListContainer : public Container {
 private:
     struct Node {
@@ -61,7 +60,6 @@ public:
     }
 };
 
-//на основі збалансованого дерева (set)
 class TreeContainer : public Container {
 private:
     set<int> tree;
@@ -113,4 +111,5 @@ int main() {
     delete c2;
 
     return 0;
+
 }
