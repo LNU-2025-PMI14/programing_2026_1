@@ -1,0 +1,76 @@
+#include <iostream>
+#include <string>
+
+class Item {
+private:
+    int id, price;
+
+public:
+    Item(int id = 0, int price = 0) : id(id), price(price) {}
+    Item(const Item& i) : id(i.id), price(i.price) {}
+
+    int getId() const { return id; }
+    int getPrice() const { return price; }
+    void setId(int v) { id = v; }
+    void setPrice(int v) { price = v; }
+
+    void print() const { std::cout << "[" << id << ", " << price << "]\n"; }
+};
+
+class Box : public Item {
+private:
+    int weight;
+
+public:
+    Box(int id = 0, int price = 0, int weight = 0) : Item(id, price), weight(weight) {}
+    Box(const Box& b) : Item(b), weight(b.weight) {}
+
+    int getWeight() const { return weight; }
+    void setWeight(int v) { weight = v; }
+
+    void print() const { std::cout << "[" << getId() << ", " << getPrice() << ", " << weight << "]\n"; }
+};
+
+class ColoredItem : public Item {
+private:
+    std::string color;
+
+public:
+    ColoredItem(int id = 0, int price = 0, std::string c = "white") : Item(id, price), color(c) {}
+    ColoredItem(const ColoredItem& c_item) : Item(c_item), color(c_item.color) {}
+
+    std::string getColor() const { return color; }
+    void setColor(const std::string& c) { color = c; }
+
+    void print() const { std::cout << "[" << getId() << ", " << getPrice() << ", " << color << "]\n"; }
+};
+
+class ColoredBox : public Box {
+private:
+    std::string color;
+
+public:
+    ColoredBox(int id = 0, int price = 0, int weight = 0, std::string c = "white") : Box(id, price, weight), color(c) {}
+    ColoredBox(const ColoredBox& cb) : Box(cb), color(cb.color) {}
+
+    std::string getColor() const { return color; }
+    void setColor(const std::string& c) { color = c; }
+
+    void print() const { std::cout << "[" << getId() << ", " << getPrice() << ", " << getWeight() << ", " << color << "]\n"; }
+};
+
+int main() {
+    Item i(1, 100); 
+    i.print();
+    
+    Box b(2, 200, 50); 
+    b.print();
+    
+    ColoredItem ci(3, 300, "red"); 
+    ci.print();
+    
+    ColoredBox cb(4, 400, 10, "blue"); 
+    cb.print();
+    
+    return 0;
+}
