@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm> 
+
+using namespace std;
+
+enum Position {
+    PROFESSOR,
+    LECTURER,
+    ASSISTANT,
+    LAB_WORKER
+};
+
+string positionToString(Position p) {
+    switch (p) {
+    case PROFESSOR: return "Professor";
+    case LECTURER: return "Lecturer";
+    case ASSISTANT: return "Assistant";
+    default: return "Staff";
+    }
+}
+
+class Person {
+public:
+    string firstName;
+    string lastName;
+    int age;
+
+    Person(string f, string l, int a) {
+        firstName = f;
+        lastName = l;
+        age = a;
+    }
+};
+
+class Employee {
+public:
+    Person* personData; 
+    Position pos;
+
+    Employee(Person* p, Position position) {
+        personData = p;
+        pos = position;
+    }
+};
+
+class University {
+private:
+    vector<Employee*> staff; 
+
+public:
+    void addEmployee(Employee* e) {
+        staff.push_back(e);
+    }
+
+    vector<Employee*> filter(string searchName, Position searchPos) {
+        vector<Employee*> result;
+
+        for (int i = 0; i < staff.size(); i++) {
+            if (staff[i]->personData->firstName.find(searchName) != string::npos && staff[i]->pos == searchPos) {
+                result.push_back(staff[i]);
+            }
+        }
+        return result;
+    }
+};
+
+int main() {
+    University lnu;
+
+    Person* p1 = new Person("Oleksandr", "Foros", 18);
+    Employee* emp1 = new Employee(p1, PROFESSOR);
+
+    Person* p2 = new Person("Oleksiy", "Ivanov", 25);
+    Employee* emp2 = new Employee(p2, LECTURER);
+
+    lnu.addEmployee(emp1);
+    lnu.addEmployee(emp2);
+
+    cout << "Searching for 'Oleks' with Professor status..." << endl;
+    vector<Employee*> results = lnu.filter("Oleks", PROFESSOR);
+
+    for (Employee* e : results) {
+        cout << "Found: " << e->personData->firstName << " " << e->personData->lastName << endl;
+    }
+
+    delete p1; delete emp1;
+    delete p2; delete emp2;
+
+    return 0;
+}
