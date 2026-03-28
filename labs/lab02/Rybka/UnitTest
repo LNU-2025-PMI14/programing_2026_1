@@ -1,0 +1,97 @@
+#include "pch.h"
+#include "CppUnitTest.h"
+#include "../AbstrackM/Abstract.h"
+#include "../AbstrackM/Abstract.cpp"
+
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+namespace ListTests
+{
+	TEST_CLASS(ListTests)
+	{
+	public:
+
+		TEST_METHOD(PushIncreasesSize)
+		{
+			List list;
+			list.push(1);
+			list.push(2);
+			Assert::AreEqual(2, list.size());
+		}
+
+		TEST_METHOD(PopReturnsFirstValue)
+		{
+			List list;
+			list.push(10);
+			list.push(20);
+			Assert::AreEqual(10, list.pop());
+		}
+
+		TEST_METHOD(PopDecreasesSize)
+		{
+			List list;
+			list.push(1);
+			list.push(2);
+			list.pop();
+			Assert::AreEqual(1, list.size());
+		}
+
+		TEST_METHOD(PopEmptyReturnsMinusOne)
+		{
+			List list;
+			Assert::AreEqual(-1, list.pop());
+		}
+
+		TEST_METHOD(SizeIsZeroOnStart)
+		{
+			List list;
+			Assert::AreEqual(0, list.size());
+		}
+	};
+}
+
+namespace BinaryTreeTests
+{
+	TEST_CLASS(BinaryTreeTests)
+	{
+	public:
+
+		TEST_METHOD(PushIncreasesSize)
+		{
+			BinaryTree tree;
+			tree.push(5);
+			tree.push(3);
+			Assert::AreEqual(2, tree.size());
+		}
+
+		TEST_METHOD(PopReturnsMinimum)
+		{
+			BinaryTree tree;
+			tree.push(5);
+			tree.push(3);
+			tree.push(7);
+			Assert::AreEqual(3, tree.pop());
+		}
+
+		TEST_METHOD(PopDecreasesSize)
+		{
+			BinaryTree tree;
+			tree.push(5);
+			tree.push(3);
+			tree.pop();
+			Assert::AreEqual(1, tree.size());
+		}
+
+		TEST_METHOD(PopEmptyReturnsMinusOne)
+		{
+			BinaryTree tree;
+			Assert::AreEqual(-1, tree.pop());
+		}
+
+		TEST_METHOD(SizeIsZeroOnStart)
+		{
+			BinaryTree tree;
+			Assert::AreEqual(0, tree.size());
+		}
+	};
+}
