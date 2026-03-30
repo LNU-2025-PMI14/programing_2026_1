@@ -1,13 +1,6 @@
 #include <iostream>
 using namespace std;
 
-/*реал≥зувати абстрактний клас контейнер на основ≥ збалансованого б≥нарного дерева
-реал≥зувати методи:
-push(додаЇ в к≥нець),
-pop(забрати з к≥нц€),
-size(повертаЇ к≥льк≥сть елемент≥в),
-print(вив≥д)*/
-
 class Container {
 public:
     virtual void push(int value) = 0;
