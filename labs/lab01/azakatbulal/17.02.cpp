@@ -3,10 +3,6 @@
 
 using namespace std;
 
-/*створити клас Point, Point 3D, Point Color,
-Point 3DColor.Визначит всі getter та setter, 
-конструктори та методи для роботи з даними класами.*/
-
 class Point{
 	private:
 		double x;
