@@ -1,0 +1,103 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm> 
+#include <map>       
+#include <set>       
+#include <iomanip>   
+
+template <typename T>
+class DataBuffer {
+private:
+    std::vector<T> data; 
+
+public:
+    void add(const T& item) {
+        data.push_back(item);
+    }
+
+    void printAll() const {
+        for (const auto& item : data) {
+            std::cout << item << "\n";
+        }
+    }
+
+    template <typename Predicate>
+    std::vector<T> filter(Predicate p) const {
+        std::vector<T> result;
+        for (const auto& item : data) {
+            if (p(item)) {
+                result.push_back(item);
+            }
+        }
+        return result;
+    }
+
+    std::vector<T>& getData() { return data; }
+};
+
+struct LogEntry {
+    long timestamp;
+    std::string level;
+    std::string message;
+
+    friend std::ostream& operator<<(std::ostream& os, const LogEntry& entry) {
+        os << "[" << entry.timestamp << "] "
+            << std::setw(8) << entry.level << ": " << entry.message;
+        return os;
+    }
+
+    bool operator<(const LogEntry& other) const {
+        return this->timestamp < other.timestamp;
+    }
+};
+
+int main() {
+    DataBuffer<LogEntry> logStorage;
+
+    logStorage.add({ 1714560500, "ERROR",   "Database connection failed" });
+    logStorage.add({ 1714560000, "INFO",    "System started" });
+    logStorage.add({ 1714560200, "WARNING", "Memory usage at 85%" });
+    logStorage.add({ 1714560100, "ERROR",   "Network timeout" });
+    logStorage.add({ 1714560800, "INFO",    "User logged in" });
+    logStorage.add({ 1714560500, "ERROR",   "Database connection failed" }); 
+
+    std::cout << "ALL LOGS (INITIAL) " << std::endl;
+    logStorage.printAll();
+
+    std::sort(logStorage.getData().begin(), logStorage.getData().end());
+
+    std::cout << "\nSORTED BY TIMESTAMP " << std::endl;
+    logStorage.printAll();
+
+    std::map<std::string, int> stats;
+    for (const auto& log : logStorage.getData()) {
+        stats[log.level]++; 
+    }
+
+    std::cout << "\nSTATISTICS " << std::endl;
+    for (auto const& [level, count] : stats) {
+        std::cout << level << ": " << count << std::endl;
+    }
+
+    auto onlyErrors = logStorage.filter([](const LogEntry& e) {
+        return e.level == "ERROR";
+        });
+
+    std::cout << "\nFILTERED: ONLY ERRORS " << std::endl;
+    for (const auto& err : onlyErrors) {
+        std::cout << err << std::endl;
+    }
+
+    std::set<std::string> uniqueMsgs;
+    for (const auto& log : logStorage.getData()) {
+        uniqueMsgs.insert(log.message);
+    }
+
+    std::cout << "\nUNIQUE MESSAGES " << std::endl;
+    for (const auto& msg : uniqueMsgs) {
+        std::cout << "- " << msg << std::endl;
+    }
+
+    return 0;
+}
