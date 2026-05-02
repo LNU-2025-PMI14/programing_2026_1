@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename TAddress>
+class Worker {
+private:
+    string name;
+    string position;
+    TAddress address;
+
+public:
+    // Конструктори
+    Worker() : name("Undefined"), position("N/A") {}
+    
+    Worker(string n, string p, TAddress addr) 
+        : name(n), position(p), address(addr) {}
+
+    void setName(const string& n) { name = n; }
+    string getName() const { return name; }
+
+    void setPosition(const string& p) { position = p; }
+    string getPosition() const { return position; }
+
+    void setAddress(const TAddress& addr) { address = addr; }
+    TAddress getAddress() const { return address; }
+
+    void input() {
+        cout << "-Input Worker Data " << endl;
+        cout << "Name: ";
+        getline(cin >> ws, name); 
+        cout << "Position: ";
+        getline(cin, position);
+        cout << "Address: ";
+        if constexpr (is_same_v<TAddress, string>) {
+            getline(cin, address);
+        } else {
+            cin >> address;
+        }
+    }
+
+    void displayInfo() const {
+        cout << "\n " << endl;
+        cout << "  Worker Information  " << endl;
+        cout << " " << endl;
+        cout << "Full Name : " << name << endl;
+        cout << "Position  : " << position << endl;
+        cout << "Address   : " << address << endl;
+        cout << " " << endl;
+    }
+};
+
+int main() {
+    Worker<string> dev;
+
+    dev.input();
+    dev.displayInfo();
+
+    return 0;
+}
