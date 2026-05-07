@@ -1,0 +1,108 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <numeric>
+#include <string>
+using namespace std;
+
+template<typename T>
+class DataBuffer {
+    vector<T> data;
+
+public:
+    void add(const T& item) {
+        data.push_back(item);
+    }
+
+    template<typename Predicate>
+    vector<T> filter(Predicate p) const {
+        vector<T> result;
+        copy_if(data.begin(), data.end(), back_inserter(result), p);
+        return result;
+    }
+
+    void printAll() const {
+        for_each(data.begin(), data.end(), [](const T& item) {
+            cout << item << "\n";
+        });
+    }
+
+    vector<T>& raw() { return data; }
+};
+
+struct LogEntry {
+    long timestamp;
+    string level;
+    string message;
+
+    bool operator<(const LogEntry& o) const {
+        return timestamp < o.timestamp;
+    }
+};
+
+ostream& operator<<(ostream& os, const LogEntry& e) {
+    os << "[" << e.timestamp << "] [" << e.level << "] " << e.message;
+    return os;
+}
+
+int main() {
+    DataBuffer<LogEntry> buffer;
+
+    buffer.add({1000, "INFO",    "Server started"});
+    buffer.add({1050, "ERROR",   "Null pointer exception"});
+    buffer.add({1020, "WARNING", "High memory usage"});
+    buffer.add({1080, "ERROR",   "Database connection lost"});
+    buffer.add({1010, "INFO",    "User logged in"});
+    buffer.add({1090, "INFO",    "Config reloaded"});
+    buffer.add({1030, "WARNING", "Disk space low"});
+    buffer.add({1060, "ERROR",   "Null pointer exception"});  // дублікат повідомлення
+    buffer.add({1015, "INFO",    "Server started"});          // дублікат повідомлення
+    buffer.add({1070, "WARNING", "High memory usage"});       // дублікат повідомлення
+    buffer.add({1040, "INFO",    "Backup completed"});
+    buffer.add({1005, "ERROR",   "Timeout on request"});
+
+    sort(buffer.raw().begin(), buffer.raw().end());
+
+    cout << " Всі логи (відсортовані) \n";
+    buffer.printAll();
+
+    map<string, int> stats;
+    for_each(buffer.raw().begin(), buffer.raw().end(), [&](const LogEntry& e) {
+        stats[e.level]++;
+    });
+
+    cout << "\n=== Статистика ===\n";
+    for (const auto& [level, count] : stats) {
+        cout << level << ": " << count << "\n";
+    }
+
+    cout << "\n Тільки ERROR \n";
+    vector<LogEntry> errors = buffer.filter([](const LogEntry& e) {
+        return e.level == "ERROR";
+    });
+    for_each(errors.begin(), errors.end(), [](const LogEntry& e) {
+        cout << e << "\n";
+    });
+
+    set<string> uniqueMessages;
+    for_each(buffer.raw().begin(), buffer.raw().end(), [&](const LogEntry& e) {
+        uniqueMessages.insert(e.message);
+    });
+
+    cout << "\n Унікальні повідомлення \n";
+    for (const auto& msg : uniqueMessages) {
+        cout << msg << "\n";
+    }
+
+    // accumulate склеює всі ERROR-повідомлення в один рядок-звіт
+    string errorReport = accumulate(errors.begin(), errors.end(), string("ERROR REPORT:\n"),
+        [](const string& acc, const LogEntry& e) {
+            return acc + "  - [" + to_string(e.timestamp) + "] " + e.message + "\n";
+        });
+
+    cout << "\n" << errorReport;
+
+    return 0;
+}
