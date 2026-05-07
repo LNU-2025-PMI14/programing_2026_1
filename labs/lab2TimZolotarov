@@ -1,0 +1,96 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Point {
+protected:
+    double x, y;
+
+public:
+    Point() : x(0), y(0) {}
+    Point(double x, double y) : x(x), y(y) {}
+    Point(const Point& o) : x(o.x), y(o.y) {}
+
+    double getX() const { return x; }
+    double getY() const { return y; }
+    void setX(double x) { this->x = x; }
+    void setY(double y) { this->y = y; }
+
+    virtual void print() const {
+        cout << "Point(" << x << ", " << y << ")\n";
+    }
+};
+
+class Point3D : public Point {
+protected:
+    double z;
+
+public:
+    Point3D() : Point(), z(0) {}
+    Point3D(double x, double y, double z) : Point(x, y), z(z) {}
+    Point3D(const Point3D& o) : Point(o), z(o.z) {}
+
+    double getZ() const { return z; }
+    void setZ(double z) { this->z = z; }
+
+    void print() const override {
+        cout << "Point3D(" << x << ", " << y << ", " << z << ")\n";
+    }
+};
+
+class PointColor : public Point {
+protected:
+    string color;
+
+public:
+    PointColor() : Point(), color("white") {}
+    PointColor(double x, double y, const string& color) : Point(x, y), color(color) {}
+    PointColor(const PointColor& o) : Point(o), color(o.color) {}
+
+    string getColor() const { return color; }
+    void setColor(const string& c) { color = c; }
+
+    void print() const override {
+        cout << "PointColor(" << x << ", " << y << ", " << color << ")\n";
+    }
+};
+
+// успадковує і Point3D і PointColor — діамантове успадкування, тому Point — virtual base
+class Point3DColor : public Point3D, public PointColor {
+public:
+    Point3DColor() : Point(), Point3D(), PointColor() {}
+
+    Point3DColor(double x, double y, double z, const string& color)
+        : Point(x, y), Point3D(x, y, z), PointColor(x, y, color) {}
+
+    Point3DColor(const Point3DColor& o)
+        : Point(o), Point3D(o), PointColor(o) {}
+
+    void setX(double x) { Point3D::setX(x); PointColor::setX(x); }
+    void setY(double y) { Point3D::setY(y); PointColor::setY(y); }
+
+    void print() const override {
+        cout << "Point3DColor(" << Point3D::x << ", " << Point3D::y
+             << ", " << z << ", " << color << ")\n";
+    }
+};
+
+int main() {
+    Point p(1, 2);
+    p.print();
+
+    Point3D p3(1, 2, 3);
+    p3.print();
+
+    PointColor pc(4, 5, "red");
+    pc.print();
+
+    Point3DColor p3c(7, 8, 9, "blue");
+    p3c.print();
+
+    p3c.setZ(99);
+    p3c.setColor("green");
+    p3c.print();
+
+    return 0;
+}
