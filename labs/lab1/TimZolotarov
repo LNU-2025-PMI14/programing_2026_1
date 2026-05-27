@@ -1,0 +1,73 @@
+#include <iostream>
+
+class Container {
+public:
+    virtual ~Container() = default;
+
+    virtual void push(int value) = 0;
+    virtual int pop() = 0;
+    virtual size_t size() const = 0;
+    virtual void print() const = 0;
+};
+
+class MyList : public Container {
+private:
+    static const size_t MAX_SIZE = 100;
+
+    int data[MAX_SIZE];
+    size_t count;
+
+public:
+    MyList() : count(0) {}
+
+    void push(int value) override {
+        if (count < MAX_SIZE) {
+            data[count] = value;
+            count++;
+        } else {
+            std::cout << "List is full!" << std::endl;
+        }
+    }
+
+    int pop() override {
+        if (count == 0) {
+            std::cout << "List is empty!" << std::endl;
+            return -1;
+        }
+
+        count--;
+        return data[count];
+    }
+
+    size_t size() const override {
+        return count;
+    }
+
+    void print() const override {
+        for (size_t i = 0; i < count; i++) {
+            std::cout << data[i] << " ";
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    MyList list;
+
+    list.push(10);
+    list.push(20);
+    list.push(30);
+
+    std::cout << "Container content: ";
+    list.print();
+
+    std::cout << "Size: " << list.size() << std::endl;
+
+    int popped = list.pop();
+    std::cout << "Popped value: " << popped << std::endl;
+
+    std::cout << "New content: ";
+    list.print();
+
+    return 0;
+}
