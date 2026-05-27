@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+enum class Position {
+    PROFESSOR,
+    LECTURER,
+    ASSISTANT,
+    LAB_WORKER
+};
+
+string positionToString(Position position) {
+    switch (position) {
+    case Position::PROFESSOR:
+        return "Professor";
+    case Position::LECTURER:
+        return "Lecturer";
+    case Position::ASSISTANT:
+        return "Assistant";
+    case Position::LAB_WORKER:
+        return "Lab worker";
+    }
+
+    return "Unknown";
+}
+
+struct Person {
+    string firstName;
+    string lastName;
+    int age;
+};
+
+struct Employee {
+    Person person;
+    Position position;
+};
+
+class University {
+private:
+    vector<Employee> staff;
+
+public:
+    void addEmployee(const Employee& employee) {
+        staff.push_back(employee);
+    }
+
+    vector<Employee> findEmployees(const string& namePart, Position position) const {
+        vector<Employee> result;
+
+        for (const Employee& employee : staff) {
+            bool nameMatches = employee.person.firstName.find(namePart) != string::npos;
+            bool positionMatches = employee.position == position;
+
+            if (nameMatches && positionMatches) {
+                result.push_back(employee);
+            }
+        }
+
+        return result;
+    }
+};
+
+int main() {
+    University lnu;
+
+    lnu.addEmployee({{"Oleksandr", "Zolotarov", 18}, Position::PROFESSOR});
+    lnu.addEmployee({{"Oleksiy", "Ivanov", 25}, Position::LECTURER});
+
+    cout << "Searching for 'Oleks' with Professor status..." << endl;
+    vector<Employee> results = lnu.findEmployees("Oleks", Position::PROFESSOR);
+
+    for (const Employee& employee : results) {
+        cout << "Found: "
+             << employee.person.firstName << " "
+             << employee.person.lastName << ", "
+             << positionToString(employee.position) << endl;
+    }
+
+    return 0;
+}
