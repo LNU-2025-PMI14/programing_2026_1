@@ -1,0 +1,64 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Student {
+private:
+    string firstName;
+    string lastName;
+    string group;
+    int age;
+
+public:
+    Student(string f, string l, string g, int a) {
+        firstName = f;
+        lastName = l;
+        group = g;
+        age = a;
+    }
+
+    void print() const {
+        cout << firstName << " " << lastName
+             << " | Group: " << group
+             << " | Age: " << age << endl;
+    }
+};
+
+int main() {
+    vector<Student> students;
+
+    ifstream file("students.txt");
+
+    if (!file) {
+        cout << "Cannot open students.txt" << endl;
+        return 1;
+    }
+
+    string firstName;
+    string lastName;
+    string group;
+    int age;
+
+    while (file >> firstName >> lastName >> group >> age) {
+        Student student(firstName, lastName, group, age);
+        students.push_back(student);
+    }
+
+    file.close();
+
+    if (students.empty()) {
+        cout << "No students found." << endl;
+        return 0;
+    }
+
+    cout << "Students list:" << endl;
+
+    for (int i = 0; i < students.size(); i++) {
+        students[i].print();
+    }
+
+    return 0;
+}
