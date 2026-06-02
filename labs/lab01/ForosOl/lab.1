@@ -1,0 +1,127 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Point {
+protected:
+    int x;
+    int y;
+
+public:
+    Point() {
+        x = 0;
+        y = 0;
+    }
+
+    Point(int xVal, int yVal) {
+        x = xVal;
+        y = yVal;
+    }
+
+    Point(const Point& other) {
+        x = other.x;
+        y = other.y;
+    }
+
+    int getX() const { return x; }
+    int getY() const { return y; }
+
+    void setX(int newX) { x = newX; }
+    void setY(int newY) { y = newY; }
+
+    void print() const {
+        cout << "Point: (" << x << ", " << y << ")" << endl;
+    }
+};
+
+class Point3D : public Point {
+protected:
+    int z;
+
+public:
+    Point3D() : Point() {
+        z = 0;
+    }
+
+    Point3D(int xVal, int yVal, int zVal) : Point(xVal, yVal) {
+        z = zVal;
+    }
+
+    Point3D(const Point3D& other) : Point(other) {
+        z = other.z;
+    }
+
+    int getZ() const { return z; }
+    void setZ(int newZ) { z = newZ; }
+
+    void print() const {
+        cout << "Point3D: (" << x << ", " << y << ", " << z << ")" << endl;
+    }
+};
+
+class PointColor : public Point {
+protected:
+    string color;
+
+public:
+    PointColor() : Point() {
+        color = "white";
+    }
+
+    PointColor(int xVal, int yVal, string col) : Point(xVal, yVal) {
+        color = col;
+    }
+
+    PointColor(const PointColor& other) : Point(other) {
+        color = other.color;
+    }
+
+    string getColor() const { return color; }
+    void setColor(string newColor) { color = newColor; }
+
+    void print() const {
+        cout << "PointColor: (" << x << ", " << y << ") Color: " << color << endl;
+    }
+};
+
+class Point3DColor : public Point3D {
+private:
+    string color;
+
+public:
+    Point3DColor() : Point3D() {
+        color = "white";
+    }
+
+    Point3DColor(int xVal, int yVal, int zVal, string col) : Point3D(xVal, yVal, zVal) {
+        color = col;
+    }
+
+    Point3DColor(const Point3DColor& other) : Point3D(other) {
+        color = other.color;
+    }
+
+    string getColor() const { return color; }
+    void setColor(string newColor) { color = newColor; }
+
+    void print() const {
+        cout << "Point3DColor: (" << x << ", " << y << ", " << z << ") Color: " << color << endl;
+    }
+};
+
+int main() {
+    Point p1(10, 20);
+    p1.print();
+
+    Point3D p2(5, 7, 12);
+    p2.print();
+
+    PointColor pc(1, 2, "Red");
+    pc.print();
+
+    Point3DColor p3c(0, 0, 5, "Blue");
+    p3c.print();
+
+    return 0;
+}
