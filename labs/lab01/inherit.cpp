@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string> //додали бібліотеку для роботи з текстом
+#include <string>
 
 using namespace std;
 
